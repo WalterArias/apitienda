@@ -1,9 +1,11 @@
+// software intermedio que activa el acceso a las rutas solo con el token valido
+
 const { expressjwt: jwt } = require("express-jwt");
 
 function authJwt(
   app,
   secretKey = "seCreTo",
-  excludedPaths = ["/api/usuarios/login"]
+  excludedPaths = ["/api/usuarios/login", "/api/usuarios/registro"]
 ) {
   app.use(
     "/api",

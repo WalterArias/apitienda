@@ -5,6 +5,7 @@ const router = express.Router();
 
 // instanciamos el controlador correspondiente
 const productoCtr = require("../controllers/productos");
+const authJwt = require("../middlewares/auth");
 
 // rutas que entregara el modulo producto
 

@@ -12,6 +12,7 @@ const pedido_detalleSchema = new Schema({
   pedido: {
     type: Schema.Types.ObjectId,
     ref: "Pedido",
+    required: true,
   },
 });
 
