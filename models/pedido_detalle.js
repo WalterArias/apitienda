@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const pedido_detalleSchema = new Schema({
   cantidad: {
@@ -18,4 +18,4 @@ const pedido_detalleSchema = new Schema({
 
 const PedidoDetalle = new model("PedidoDetalle", pedido_detalleSchema);
 
-module.exports = PedidoDetalle;
+export default PedidoDetalle;

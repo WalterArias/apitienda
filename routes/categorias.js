@@ -1,12 +1,11 @@
-// rutas para consumir el modulo productos del SERVICIO ECOMMERCE
+// rutas para consumir el modulo categorias del SERVICIO ECOMMERCE
+import express from "express";
+import { listartodas, nueva } from "../controllers/categorias";
 
-const express = require("express");
 const router = express.Router();
 
-// instanciamos el controlador correspondiente
-const categoriasCtr = require("../controllers/categorias");
+// definimos las rutas para las categorías
+router.get("/categorias/listartodas", listartodas);
+router.post("/categorias/nueva", nueva);
 
-router.get("/categorias/listartodas", categoriasCtr.listartodas);
-router.post("/categorias/nueva", categoriasCtr.nueva);
-
-module.exports = router;
+export default router;

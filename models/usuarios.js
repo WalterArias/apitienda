@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const usuarioSchema = Schema(
   {
@@ -49,4 +49,4 @@ const usuarioSchema = Schema(
 //cambio en el estilo de exportacion
 
 const Usuario = new model("Usuario", usuarioSchema);
-module.exports = Usuario;
+export default Usuario;

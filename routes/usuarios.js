@@ -1,31 +1,24 @@
 // rutas para consumir el modulo productos del SERVICIO ECOMMERCE
 
-const express = require("express");
+import express from "express";
+import multer from "multer";
+import usuariosCtr from "../controllers/usuarios.js";
+
 const router = express.Router();
-// middleware: util para manejar los request en body del formulario (files)
-const multer = require("multer");
 
-// instanciamos el controlador correspondiente
-const usuariosCtr = require("../controllers/usuarios");
-
-// configurar emulacion del disco duro local
-
+// Configuración de almacenamiento para Multer
 const storage = multer.diskStorage({
-  //ruta de destino para almacenar los archivos
   destination: (req, file, cb) => {
     cb(null, "./uploads/usuarios/");
   },
-  //estructura para denominar los archivos
   filename: (req, file, cb) => {
-    //armamos el nombre del archivo
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-// instancia del multer con la configuracion de almacenamiento y nombre de archivo
+
 const uploads = multer({ storage });
 
-// rutas que entregara el modulo producto
-
+// Rutas del módulo usuarios
 router.get("/usuarios/listartodos", usuariosCtr.listartodos);
 router.post("/usuarios/registro", usuariosCtr.registro);
 router.post("/usuarios/login", usuariosCtr.login);
@@ -35,8 +28,11 @@ router.post(
   usuariosCtr.subirImagen
 );
 router.get("/usuarios/avatar/:file", usuariosCtr.avatar);
-/*router.get("/producto/buscarxid/:id", productoCtr.buscarxid);
-router.delete("/producto/borrarxid/:id", productoCtr.borrarxid);
-router.put("/producto/actualizarxid/:id", productoCtr.actualizarxid); */
 
-module.exports = router;
+// Ejemplo de rutas comentadas para productos (puedes descomentar si tienes los controladores)
+// import productoCtr from "../controllers/productos.js";
+// router.get("/producto/buscarxid/:id", productoCtr.buscarxid);
+// router.delete("/producto/borrarxid/:id", productoCtr.borrarxid);
+// router.put("/producto/actualizarxid/:id", productoCtr.actualizarxid);
+
+export default router;

@@ -1,6 +1,6 @@
 // rutas para consumir el modulo productos del SERVICIO ECOMMERCE
 
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // instanciamos el controlador correspondiente
@@ -16,4 +16,4 @@ router.delete("/producto/borrarxid/:id", productoCtr.borrarxid);
 router.put("/producto/actualizarxid/:id", productoCtr.actualizarxid);
 router.get("/producto/totalproductos", productoCtr.totalProductos);
 
-module.exports = router;
+export default router;

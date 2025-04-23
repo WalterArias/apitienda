@@ -3,14 +3,15 @@
  *
  * */
 
-import Categoria from "../models/categorias";
+let Categoria = require("../models/categorias");
 
 // toda la logica de un crud tipico listartodos, listarpor id, crear, actualizar, borrar...
 
 const listartodas = async (req, res) => {
   try {
     // consultar todos sin filtro
-    const listaCategorias = await Categoria.find().exec();
+
+    let listaCategorias = await Categoria.find().exec();
     res.status(200).send({
       exito: true,
       listaCategorias,
@@ -24,11 +25,14 @@ const listartodas = async (req, res) => {
 };
 
 //crear nuevo
+
 const nueva = async (req, res) => {
   // llega el objeto en el body del request
-  const { nombre, icono, color } = req.body;
-  const datos = { nombre, icono, color };
-  
+  let datos = {
+    nombre: req.body.nombre,
+    icono: req.body.icono,
+    color: req.body.color,
+  };
   try {
     // instanncia del modelo Producto (collection)
     const categoriaNueva = new Categoria(datos);
@@ -47,14 +51,15 @@ const nueva = async (req, res) => {
 };
 
 // buscarpor id o por otro parametro
+
 const buscarxid = async (req, res) => {
   // recibimos el parametro por el cual debo buscar y eliminar
-  const { id } = req.params;
+  let id = req.params.id;
 
   try {
     // logica de buscar y mostrar el resultado del query
     //let consulta = await Producto.find({ id: req.params.id }).exec();
-    const consulta = await Categoria.findById(id).exec();
+    let consulta = await Categoria.findById(id).exec();
     return res.send({
       estado: true,
       mensaje: "exito !",
@@ -70,16 +75,21 @@ const buscarxid = async (req, res) => {
 };
 
 // actualizar de acuerdo al id del producto
+
 const actualizarxid = async (req, res) => {
   //recibe el parametro de la consulta
-  const { id } = req.params;
+
+  let id = req.params.id;
 
   //payload que viene en el body :: los datos que manda el formulario
-  const { nombre, icono, color } = req.body;
-  const datos = { nombre, icono, color };
+  let datos = {
+    nombre: req.body.nombre,
+    icono: req.body.icono,
+    color: req.body.color,
+  };
 
   try {
-    const consulta = await Categoria.findByIdAndUpdate(id, datos).exec();
+    let consulta = await Categoria.findByIdAndUpdate(id, datos).exec();
     return res.send({
       estado: true,
       mensaje: "documento creado !",
@@ -94,13 +104,14 @@ const actualizarxid = async (req, res) => {
 };
 
 //borrar de acuerdo al id  :::: RECUERDE QUE ESTE ES UN BORRADO DIDACTICO - NO LO USE EN EL MUNDO REAL
+
 const borrarxid = async (req, res) => {
   //recibimos el parametro
-  const { id } = req.params;
+  let id = req.params.id;
 
   try {
-    const consulta = await Categoria.findOneAndDelete({ _id: id }).exec();
-    //const consulta = await Producto.findByIdAndDelete(id).exec();
+    let consulta = await Categoria.findOneAndDelete({ _id: id }).exec();
+    //let consulta = await Producto.findByIdAndDelete(id).exec();
 
     return res.send({
       estado: true,
@@ -116,7 +127,7 @@ const borrarxid = async (req, res) => {
   }
 };
 
-export {
+module.exports = {
   listartodas,
   nueva,
   buscarxid,

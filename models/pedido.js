@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const pedidoSchema = new Schema({
   direcciondespacho: {
@@ -38,4 +38,4 @@ const pedidoSchema = new Schema({
 });
 
 const Pedido = new model("Pedido", pedidoSchema);
-module.exports = Pedido;
+export default Pedido;

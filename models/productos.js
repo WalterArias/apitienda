@@ -1,6 +1,6 @@
 //modelo para la coleccion producto
 //destructuring de la clase mongoose --solo traigo los metodos que me importan
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 //creamos el schema
 
@@ -68,4 +68,4 @@ const productoSchema = Schema(
 );
 
 const Producto = new model("Producto", productoSchema);
-module.exports = Producto;
+export default Producto;

@@ -1,16 +1,16 @@
 //instanciamos la capa modelo correspondiente
-import bcrypt from "bcryptjs";
-import Usuarios from "../models/usuarios";
-import jwt from "jsonwebtoken";
+let bcrypt = require("bcryptjs");
+let Usuarios = require("../models/usuarios");
+const jwt = require("jsonwebtoken");
 // node nativo : fs : filessystem instanciamos para manipular el sistema de archivos del servidor
-import fs from "fs";
+const fs = require("fs");
 // modulo nativo de node util para manejar las rutas
-import path from "path";
+const path = require("path");
 
 const listartodos = async (req, res) => {
   try {
     // consultar todos sin filtro
-    const listaUsuarios = await Usuarios.find().exec();
+    let listaUsuarios = await Usuarios.find().exec();
     res.status(200).send({
       exito: true,
       listaUsuarios,
@@ -34,31 +34,20 @@ const listartodos = async (req, res) => {
 
 const registro = async (req, res) => {
   //recibir la data
-  const {
-    nombre,
-    email,
-    password,
-    telefono,
-    esadmin,
-    direccion,
-    zip,
-    ciudad,
-    pais,
-  } = req.body;
 
-  const data = {
-    nombre,
-    email,
-    passwordHash: bcrypt.hashSync(password, 10),
-    telefono,
-    esAdmin: esadmin,
-    direccion,
-    zip,
-    ciudad,
-    pais,
+  let data = {
+    nombre: req.body.nombre,
+    email: req.body.email,
+    passwordHash: bcrypt.hashSync(req.body.password, 10),
+    telefono: req.body.telefono,
+    esAdmin: req.body.esadmin,
+    direccion: req.body.direccion,
+    zip: req.body.zip,
+    ciudad: req.body.ciudad,
+    pais: req.body.pais,
   };
 
-  const usuarioExiste = await Usuarios.findOne({ email });
+  let usuarioExiste = await Usuarios.findOne({ email: req.body.email });
 
   if (usuarioExiste) {
     return res.send({
@@ -69,8 +58,8 @@ const registro = async (req, res) => {
 
   try {
     //objeto
-    const usuarioNuevo = new Usuarios(data);
-    await usuarioNuevo.save();
+    let usuarioNuevo = new Usuarios(data);
+    usuarioNuevo.save();
     res.send({
       estado: true,
       mensaje: "usuario creado",
@@ -83,8 +72,8 @@ const registro = async (req, res) => {
     });
   }
 };
-
 /** 
+
 @description funcion que hace el login o ingreso al sistema con autenticacion de 2 factores
 @author Waloson
 @param req la peticion con usuario y password
@@ -93,14 +82,14 @@ const registro = async (req, res) => {
 @callback funcion asincronica que ejecuta la api
 @function login del sistema
 @class Usuarios
-*/
 
+*/
 const login = async (req, res) => {
   // recibir data: user / pass
-  const { email, pwd } = req.body;
+  let data = req.body.email;
 
   //validar  que el usuario exista en la bd
-  const usuarioExiste = await Usuarios.findOne({ email });
+  let usuarioExiste = await Usuarios.findOne({ email: data });
   /*   console.log(usuarioExiste); */
   if (!usuarioExiste) {
     return res.send({
@@ -109,7 +98,10 @@ const login = async (req, res) => {
     });
   }
   //validar las credenciales
-  if (usuarioExiste && bcrypt.compareSync(pwd, usuarioExiste.passwordHash)) {
+  if (
+    usuarioExiste &&
+    bcrypt.compareSync(req.body.pwd, usuarioExiste.passwordHash)
+  ) {
     // Autenticacion de 2 factores con generacion del token
 
     const token = jwt.sign(
@@ -138,6 +130,7 @@ const login = async (req, res) => {
 };
 
 //sube la imagen del usuario
+
 const subirImagen = async (req, res) => {
   try {
     // Validar si se subió un archivo
@@ -148,12 +141,12 @@ const subirImagen = async (req, res) => {
       });
     }
     // validar la extension de la imagen
-    const { originalname, filename, path: filePath } = req.file;
+    const { originalname, filename, path } = req.file;
     const extension = originalname.split(".").pop().toLowerCase();
     // Validar extensión de la imagen
     const extensionesValidas = ["png", "jpg", "jpeg", "gif"];
     if (!extensionesValidas.includes(extension)) {
-      await fs.promises.unlink(filePath); // Eliminar archivo inválido
+      await fs.unlink(path); // Eliminar archivo inválido
       return res.status(400).json({
         estado: false,
         mensaje: "Extensión de archivo no permitida",
@@ -182,10 +175,10 @@ const subirImagen = async (req, res) => {
 // retorna la ruta de la imagen
 const avatar = (req, res) => {
   // Sacar el parametro de la url
-  const { file } = req.params;
+  const file = req.params.file;
 
   // Montar el path real de la imagen
-  const filePath = `./uploads/usuarios/${file}`;
+  const filePath = "./uploads/usuarios/" + file;
 
   // Comprobar que existe
   fs.stat(filePath, (error, exists) => {
@@ -200,5 +193,11 @@ const avatar = (req, res) => {
     return res.sendFile(path.resolve(filePath));
   });
 };
+module.exports = {
+  listartodos,
+  registro,
+  login,
+  subirImagen,
 
-export { listartodos, registro, login, subirImagen, avatar };
+  avatar,
+};
